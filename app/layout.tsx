@@ -1,13 +1,14 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import type React from "react"
+import type { Metadata } from "next"
+import "./globals.css"
 
 export const metadata: Metadata = {
   title: "UBM's Culinary",
-  description: 'Rekomendasi Makanan di Kampus Universitas Bunda Mulia Serpong',
-  generator: 'v0.dev',
+  description: "Rekomendasi Makanan di Kampus Universitas Bunda Mulia Serpong",
+  generator: "v0.dev",
   icons: {
-    icon: '/icons.png'
-  }
+    icon: "/icons.png",
+  },
 }
 
 export default function RootLayout({
@@ -18,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/icon.png"/>
+        <link rel="icon" href="/icon.png" />
       </head>
       <body>{children}</body>
     </html>

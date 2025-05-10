@@ -1,17 +1,57 @@
+"use client"
+
+import { useState } from "react"
 import { Search } from "lucide-react"
 import Link from "next/link"
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import FoodCard from "@/components/food-card"
 import HeroSection from "@/components/hero-section"
 import { foodVendors } from "@/lib/data"
-import SearchMenu from "@/components/SearchMenu";
+import SearchMenu from "@/components/SearchMenu"
+import { Button } from "@/components/ui/button"
+import type { FoodVendor } from "@/lib/types"
 
 export default function Home() {
-  return (
+  const [priceFilter, setPriceFilter] = useState<string | null>(null)
 
+  // Fungsi untuk memfilter vendor berdasarkan rentang harga
+  const filterVendorsByPrice = (vendors: FoodVendor[]): FoodVendor[] => {
+    if (!priceFilter) return vendors
+
+    return vendors
+      .map((vendor) => {
+        // Salin vendor dan filter menu berdasarkan rentang harga
+        const filteredMenu = vendor.menu.filter((menuItem) => {
+          const price = menuItem.price
+          switch (priceFilter) {
+            case "under10k":
+              return price < 10000
+            case "10kTo20k":
+              return price >= 10000 && price <= 20000
+            case "above20k":
+              return price > 20000
+            default:
+              return true
+          }
+        })
+
+        // Kembalikan vendor dengan menu yang difilter
+        return {
+          ...vendor,
+          menu: filteredMenu,
+        }
+      })
+      .filter((vendor) => vendor.menu.length > 0) // Hanya tampilkan vendor yang memiliki menu setelah difilter
+  }
+
+  // Filter vendor untuk setiap tab
+  const allVendorsFiltered = filterVendorsByPrice(foodVendors)
+  const b1VendorsFiltered = filterVendorsByPrice(foodVendors.filter((vendor) => vendor.description?.includes("B1")))
+  const lt10VendorsFiltered = filterVendorsByPrice(
+    foodVendors.filter((vendor) => vendor.description?.includes("lt.10")),
+  )
+
+  return (
     <main className="min-h-screen">
       <header className="sticky top-0 z-50 border-b backdrop-blur bg-[#5DB996]">
         <div className="container flex h-16 items-center justify-between  ">
@@ -45,52 +85,121 @@ export default function Home() {
 
       <section id="vendors" className=" bg-[#FBF6E9] ">
         <div className="container py-12 md:py-24">
-        <div className="flex flex-col items-center justify-center gap-4 text-center ">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#118B50]">Kantin Kampus</h2>
-          <p className="max-w-[700px]  md:text-xl/relaxed text-[#118B50]">
-            Temukan berbagai pilihan makanan yang tersedia di kantin kampus UBM
-          </p>
-        </div>
-
-        <Tabs defaultValue="semua" className="mt-12">
-          <div className="flex justify-center">
-            <TabsList className="grid w-full max-w-md grid-cols-3">
-              <TabsTrigger value="semua">Semua</TabsTrigger>
-              <TabsTrigger value="b1">Kantin B1</TabsTrigger>
-              <TabsTrigger value="lt10">Kantin Lt.10</TabsTrigger>
-            </TabsList>
+          <div className="flex flex-col items-center justify-center gap-4 text-center ">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#118B50]">
+              Kantin Kampus
+            </h2>
+            <p className="max-w-[700px]  md:text-xl/relaxed text-[#118B50]">
+              Temukan berbagai pilihan makanan yang tersedia di kantin kampus UBM
+            </p>
           </div>
 
-          <TabsContent value="semua" className="mt-8">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {foodVendors.map((vendor, index) => (
-                <FoodCard key={index} vendor={vendor} />
-              ))}
+          <Tabs defaultValue="semua" className="mt-12">
+            <div className="flex justify-center">
+              <TabsList className="grid w-full max-w-md grid-cols-3">
+                <TabsTrigger value="semua">Semua</TabsTrigger>
+                <TabsTrigger value="b1">Kantin B1</TabsTrigger>
+                <TabsTrigger value="lt10">Kantin Lt.10</TabsTrigger>
+              </TabsList>
             </div>
-          </TabsContent>
 
-          <TabsContent value="b1" className="mt-8">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {foodVendors
-                .filter((vendor) => vendor.description?.includes("B1"))
-                .map((vendor, index) => (
-                  <FoodCard key={index} vendor={vendor} />
-                ))}
+            {/* Filter harga dengan indikator aktif */}
+            <div className="flex justify-center mt-4">
+              <div className="flex gap-2 flex-wrap">
+                <Button
+                  variant={priceFilter === "under10k" ? "default" : "outline"}
+                  size="sm"
+                  className={
+                    priceFilter === "under10k"
+                      ? "bg-[#118B50] text-[#FBF6E9]"
+                      : "bg-[#FBF6E9] text-[#118B50] hover:bg-[#FBF6E9]/80"
+                  }
+                  onClick={() => setPriceFilter(priceFilter === "under10k" ? null : "under10k")}
+                >
+                  Dibawah 10k
+                </Button>
+                <Button
+                  variant={priceFilter === "10kTo20k" ? "default" : "outline"}
+                  size="sm"
+                  className={
+                    priceFilter === "10kTo20k"
+                      ? "bg-[#118B50] text-[#FBF6E9]"
+                      : "bg-[#FBF6E9] text-[#118B50] hover:bg-[#FBF6E9]/80"
+                  }
+                  onClick={() => setPriceFilter(priceFilter === "10kTo20k" ? null : "10kTo20k")}
+                >
+                  10k - 20k
+                </Button>
+                <Button
+                  variant={priceFilter === "above20k" ? "default" : "outline"}
+                  size="sm"
+                  className={
+                    priceFilter === "above20k"
+                      ? "bg-[#118B50] text-[#FBF6E9]"
+                      : "bg-[#FBF6E9] text-[#118B50] hover:bg-[#FBF6E9]/80"
+                  }
+                  onClick={() => setPriceFilter(priceFilter === "above20k" ? null : "above20k")}
+                >
+                  Diatas 20k
+                </Button>
+                {priceFilter && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-[#FBF6E9] text-[#118B50] hover:bg-[#FBF6E9]/80"
+                    onClick={() => setPriceFilter(null)}
+                  >
+                    Reset Filter
+                  </Button>
+                )}
+              </div>
             </div>
-          </TabsContent>
 
-          <TabsContent value="lt10" className="mt-8">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {foodVendors
-                .filter((vendor) => vendor.description?.includes("lt.10"))
-                .map((vendor, index) => (
-                  <FoodCard key={index} vendor={vendor} />
-                ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="semua" className="mt-8">
+              {allVendorsFiltered.length > 0 ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {allVendorsFiltered.map((vendor, index) => (
+                    <FoodCard key={index} vendor={vendor} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-10">
+                  <p className="text-[#118B50] text-lg">Tidak ada menu yang sesuai dengan filter harga.</p>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="b1" className="mt-8">
+              {b1VendorsFiltered.length > 0 ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {b1VendorsFiltered.map((vendor, index) => (
+                    <FoodCard key={index} vendor={vendor} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-10">
+                  <p className="text-[#118B50] text-lg">Tidak ada menu yang sesuai dengan filter harga di Kantin B1.</p>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="lt10" className="mt-8">
+              {lt10VendorsFiltered.length > 0 ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {lt10VendorsFiltered.map((vendor, index) => (
+                    <FoodCard key={index} vendor={vendor} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-10">
+                  <p className="text-[#118B50] text-lg">
+                    Tidak ada menu yang sesuai dengan filter harga di Kantin Lt.10.
+                  </p>
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
-        
       </section>
 
       <section id="locations" className="bg-muted py-12 md:py-24">
@@ -152,7 +261,10 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-semibold text-white">Kontak</h3>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground text-white">
-                <li>UBM Tower, Alam Sutera, Jl. Jalur Sutera Bar. No.Kav.7-9, Panunggangan Tim., Kec. Pinang, Kota Tangerang, Banten 15143</li>
+                <li>
+                  UBM Tower, Alam Sutera, Jl. Jalur Sutera Bar. No.Kav.7-9, Panunggangan Tim., Kec. Pinang, Kota
+                  Tangerang, Banten 15143
+                </li>
                 <li>info@ubm.ac.id</li>
                 <li>+62 857-7966-0661</li>
               </ul>
