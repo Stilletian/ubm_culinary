@@ -1,12 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown, ChevronUp, Info } from "lucide-react"
+import { ChevronDown, ChevronUp } from "lucide-react"
 import { motion } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import VendorDetail from "@/components/vendor-detail"
 import type { FoodVendor } from "@/lib/types"
 
 interface FoodCardProps {
@@ -26,7 +27,7 @@ export default function FoodCard({ vendor }: FoodCardProps) {
       transition={{ duration: 0.3 }}
       whileHover={{ y: -5 }}
     >
-      <Card className="h-full overflow-hidden ">
+      <Card className="h-full overflow-hidden">
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between">
             <CardTitle className="text-lg">{vendorName}</CardTitle>
@@ -63,9 +64,7 @@ export default function FoodCard({ vendor }: FoodCardProps) {
               )}
             </Button>
           )}
-          <Button variant="outline" size="sm">
-            <Info className="mr-1 h-4 w-4" /> Detail
-          </Button>
+          <VendorDetail vendor={vendor} />
         </CardFooter>
       </Card>
     </motion.div>
