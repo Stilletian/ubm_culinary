@@ -1,41 +1,17 @@
-"use client"
-
-import * as React from "react"
 import { Search } from "lucide-react"
 import Link from "next/link"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import FoodCard from "@/components/food-card"
 import HeroSection from "@/components/hero-section"
 import { foodVendors } from "@/lib/data"
-import type { FoodVendor } from "@/lib/types"
-import SearchMenu from "@/components/SearchMenu"
-import { Button } from "@/components/ui/button"
+import SearchMenu from "@/components/SearchMenu";
 
 export default function Home() {
-  const [priceFilter, setPriceFilter] = React.useState<string | null>(null)
-
-  // Fungsi untuk memfilter vendor berdasarkan harga
-  const filterVendorsByPrice = (vendors: FoodVendor[], priceRange: string | null) => {
-    if (!priceRange) return vendors
-
-    return vendors
-      .map((vendor) => {
-        const filteredMenu = vendor.menu.filter((item) => {
-          if (priceRange === "below10k") return item.price < 10000
-          if (priceRange === "10k-20k") return item.price >= 10000 && item.price <= 20000
-          if (priceRange === "above20k") return item.price > 20000
-          return true
-        })
-
-        return {
-          ...vendor,
-          menu: filteredMenu,
-        }
-      })
-      .filter((vendor) => vendor.menu.length > 0)
-  }
-
   return (
+
     <main className="min-h-screen">
       <header className="sticky top-0 z-50 border-b backdrop-blur bg-[#5DB996]">
         <div className="container flex h-16 items-center justify-between  ">
@@ -69,124 +45,52 @@ export default function Home() {
 
       <section id="vendors" className=" bg-[#FBF6E9] ">
         <div className="container py-12 md:py-24">
-          <div className="flex flex-col items-center justify-center gap-4 text-center ">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#118B50]">
-              Kantin Kampus
-            </h2>
-            <p className="max-w-[700px]  md:text-xl/relaxed text-[#118B50]">
-              Temukan berbagai pilihan makanan yang tersedia di kantin kampus UBM
-            </p>
+        <div className="flex flex-col items-center justify-center gap-4 text-center ">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#118B50]">Kantin Kampus</h2>
+          <p className="max-w-[700px]  md:text-xl/relaxed text-[#118B50]">
+            Temukan berbagai pilihan makanan yang tersedia di kantin kampus UBM
+          </p>
+        </div>
+
+        <Tabs defaultValue="semua" className="mt-12">
+          <div className="flex justify-center">
+            <TabsList className="grid w-full max-w-md grid-cols-3">
+              <TabsTrigger value="semua">Semua</TabsTrigger>
+              <TabsTrigger value="b1">Kantin B1</TabsTrigger>
+              <TabsTrigger value="lt10">Kantin Lt.10</TabsTrigger>
+            </TabsList>
           </div>
 
-          <Tabs defaultValue="semua" className="mt-12">
-            <div className="flex justify-center">
-              <TabsList className="grid w-full max-w-md grid-cols-3">
-                <TabsTrigger value="semua">Semua</TabsTrigger>
-                <TabsTrigger value="b1">Kantin B1</TabsTrigger>
-                <TabsTrigger value="lt10">Kantin Lt.10</TabsTrigger>
-              </TabsList>
+          <TabsContent value="semua" className="mt-8">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {foodVendors.map((vendor, index) => (
+                <FoodCard key={index} vendor={vendor} />
+              ))}
             </div>
+          </TabsContent>
 
-            <TabsContent value="semua" className="mt-8">
-              <div className="mb-6 flex justify-center gap-2">
-                <Button
-                  variant={priceFilter === "below10k" ? "default" : "outline"}
-                  onClick={() => setPriceFilter(priceFilter === "below10k" ? null : "below10k")}
-                  className={priceFilter === "below10k" ? "bg-[#118B50] text-white" : "border-[#118B50] text-[#118B50]"}
-                >
-                  Dibawah Rp 10k
-                </Button>
-                <Button
-                  variant={priceFilter === "10k-20k" ? "default" : "outline"}
-                  onClick={() => setPriceFilter(priceFilter === "10k-20k" ? null : "10k-20k")}
-                  className={priceFilter === "10k-20k" ? "bg-[#118B50] text-white" : "border-[#118B50] text-[#118B50]"}
-                >
-                  Rp 10k - 20k
-                </Button>
-                <Button
-                  variant={priceFilter === "above20k" ? "default" : "outline"}
-                  onClick={() => setPriceFilter(priceFilter === "above20k" ? null : "above20k")}
-                  className={priceFilter === "above20k" ? "bg-[#118B50] text-white" : "border-[#118B50] text-[#118B50]"}
-                >
-                  Diatas Rp 20k
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {filterVendorsByPrice(foodVendors, priceFilter).map((vendor, index) => (
+          <TabsContent value="b1" className="mt-8">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {foodVendors
+                .filter((vendor) => vendor.description?.includes("B1"))
+                .map((vendor, index) => (
                   <FoodCard key={index} vendor={vendor} />
                 ))}
-              </div>
-            </TabsContent>
+            </div>
+          </TabsContent>
 
-            <TabsContent value="b1" className="mt-8">
-              <div className="mb-6 flex justify-center gap-2">
-                <Button
-                  variant={priceFilter === "below10k" ? "default" : "outline"}
-                  onClick={() => setPriceFilter(priceFilter === "below10k" ? null : "below10k")}
-                  className={priceFilter === "below10k" ? "bg-[#118B50] text-white" : "border-[#118B50] text-[#118B50]"}
-                >
-                  Dibawah Rp 10k
-                </Button>
-                <Button
-                  variant={priceFilter === "10k-20k" ? "default" : "outline"}
-                  onClick={() => setPriceFilter(priceFilter === "10k-20k" ? null : "10k-20k")}
-                  className={priceFilter === "10k-20k" ? "bg-[#118B50] text-white" : "border-[#118B50] text-[#118B50]"}
-                >
-                  Rp 10k - 20k
-                </Button>
-                <Button
-                  variant={priceFilter === "above20k" ? "default" : "outline"}
-                  onClick={() => setPriceFilter(priceFilter === "above20k" ? null : "above20k")}
-                  className={priceFilter === "above20k" ? "bg-[#118B50] text-white" : "border-[#118B50] text-[#118B50]"}
-                >
-                  Diatas Rp 20k
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {filterVendorsByPrice(
-                  foodVendors.filter((vendor) => vendor.description?.includes("B1")),
-                  priceFilter,
-                ).map((vendor, index) => (
+          <TabsContent value="lt10" className="mt-8">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {foodVendors
+                .filter((vendor) => vendor.description?.includes("lt.10"))
+                .map((vendor, index) => (
                   <FoodCard key={index} vendor={vendor} />
                 ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="lt10" className="mt-8">
-              <div className="mb-6 flex justify-center gap-2">
-                <Button
-                  variant={priceFilter === "below10k" ? "default" : "outline"}
-                  onClick={() => setPriceFilter(priceFilter === "below10k" ? null : "below10k")}
-                  className={priceFilter === "below10k" ? "bg-[#118B50] text-white" : "border-[#118B50] text-[#118B50]"}
-                >
-                  Dibawah Rp 10k
-                </Button>
-                <Button
-                  variant={priceFilter === "10k-20k" ? "default" : "outline"}
-                  onClick={() => setPriceFilter(priceFilter === "10k-20k" ? null : "10k-20k")}
-                  className={priceFilter === "10k-20k" ? "bg-[#118B50] text-white" : "border-[#118B50] text-[#118B50]"}
-                >
-                  Rp 10k - 20k
-                </Button>
-                <Button
-                  variant={priceFilter === "above20k" ? "default" : "outline"}
-                  onClick={() => setPriceFilter(priceFilter === "above20k" ? null : "above20k")}
-                  className={priceFilter === "above20k" ? "bg-[#118B50] text-white" : "border-[#118B50] text-[#118B50]"}
-                >
-                  Diatas Rp 20k
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {filterVendorsByPrice(
-                  foodVendors.filter((vendor) => vendor.description?.includes("lt.10")),
-                  priceFilter,
-                ).map((vendor, index) => (
-                  <FoodCard key={index} vendor={vendor} />
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </TabsContent>
+        </Tabs>
         </div>
+        
       </section>
 
       <section id="locations" className="bg-muted py-12 md:py-24">
@@ -248,10 +152,7 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-semibold text-white">Kontak</h3>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground text-white">
-                <li>
-                  UBM Tower, Alam Sutera, Jl. Jalur Sutera Bar. No.Kav.7-9, Panunggangan Tim., Kec. Pinang, Kota
-                  Tangerang, Banten 15143
-                </li>
+                <li>UBM Tower, Alam Sutera, Jl. Jalur Sutera Bar. No.Kav.7-9, Panunggangan Tim., Kec. Pinang, Kota Tangerang, Banten 15143</li>
                 <li>info@ubm.ac.id</li>
                 <li>+62 857-7966-0661</li>
               </ul>

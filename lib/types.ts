@@ -5,6 +5,6 @@ export interface MenuItem {
 
 export interface FoodVendor {
   name: string
-  description?: string
+  description: string
   menu: MenuItem[]
 }
