@@ -31,7 +31,7 @@ export const foodVendors: FoodVendor[] = [
     ],
   },
   {
-    name: "",
+    name: "Dimsum AJ",
     description: "Kantin lt.10",
     menu: [
       { item: "Roti-O", price: 6000 },
@@ -138,8 +138,8 @@ export const foodVendors: FoodVendor[] = [
     ],
   },
   {
-    name: "Ayam Geprek dan Soto Semarang",
-    description: "Kantin B1",
+    name: "Soto Semarang Bu Sri Sehati",
+    description: "Kantin lt.10",
     menu: [
       { item: "Soto Semarang (Ayam)", price: 17000 },
       { item: "Soto Semarang (Ayam) + Nasi Campur", price: 19000 },
@@ -228,7 +228,7 @@ export const foodVendors: FoodVendor[] = [
     ],
   },
   {
-    name: "",
+    name: "Nasi Goreng",
     description: "Kantin B1",
     menu: [
       { item: "Nasi Goreng Telur", price: 18000 },
@@ -243,7 +243,7 @@ export const foodVendors: FoodVendor[] = [
     ],
   },
   {
-    name: "",
+    name: "Bakso Malang",
     description: "Kantin B1",
     menu: [
       { item: "Tahu Gejrot", price: 10000 },
@@ -295,7 +295,7 @@ export const foodVendors: FoodVendor[] = [
     ],
   },
   {
-    name: "",
+    name: "King Kebab",
     description: "Kantin B1",
     menu: [
       { item: "Kebab Beef", price: 18000 },
@@ -400,7 +400,7 @@ export const foodVendors: FoodVendor[] = [
     ],
   },
   {
-    name: "",
+    name: "Bebek & Ayam Bumbu Hitam",
     description: "Kantin B1",
     menu: [
       { item: "Bebek Original", price: 23000 },
