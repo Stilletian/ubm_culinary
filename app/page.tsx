@@ -215,7 +215,7 @@ export default function Home() {
             <div className="group relative overflow-hidden rounded-xl">
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 transition-all group-hover:from-black/70"></div>
               <img
-                src="/placeholder.svg?height=300&width=400"
+                src="/Sisyphus.jpg"
                 alt="Kantin B1"
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
@@ -228,7 +228,7 @@ export default function Home() {
             <div className="group relative overflow-hidden rounded-xl">
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 transition-all group-hover:from-black/70"></div>
               <img
-                src="/placeholder.svg?height=300&width=400"
+                src="/aleph-0.jpg"
                 alt="Kantin Lt.10"
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
