@@ -253,9 +253,8 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-semibold text-white">Jam Operasional Kantin</h3>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground text-white">
-                <li>Senin - Jumat: 08:00 - 20:00</li>
-                <li>Sabtu: 08:00 - 17:00</li>
-                <li>Kiamat/Minggu: Tutup Lah </li>
+                <li>Senin - Jumat: 07:00 - 17:00</li>
+                <li>Sabtu/Minggu: Tutup</li>
               </ul>
             </div>
             <div>
